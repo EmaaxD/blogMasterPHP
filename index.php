@@ -12,7 +12,7 @@
 			<a href="">Ver todas las entradas</a>
 		</div>
 
-	</div>3884558619
+	</div>
 		
 <!-- footer -->
 <?php require_once 'includes/footer.php' ?>
