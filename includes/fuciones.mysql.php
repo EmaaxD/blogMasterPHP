@@ -40,6 +40,22 @@ function insertCategorias($core,$data){
 	return $devolvemos;
 }
 
+//script para insert entradas
+function insertPost($core,$data){
+	$devolvemos = array();
+
+	$sql = "INSERT INTO entradas VALUES('$data[id]','$data[usuario]','$data[categoria]','$data[titulo]','$data[descripcion]',NOW())";
+	$result = $core->query($sql);
+
+	if ($result) {
+		$devolvemos['success'] = 'Se creo post correctamente';
+	}else{
+		$devolvemos['error'] = 'No se insertaron los datos';
+	}
+
+	return $devolvemos;
+}
+
 //funcion para verificar si existe ese registro
 function verifyData($core,$tabla,$campo,$data,$nombre = null){
 	

@@ -12,18 +12,20 @@
 			<input type="text" name="titulo" id="titulo" placeholder="Titulo del post">
 
 			<label for="descripcion">Descripcion</label>
-			<input type="text" name="descripcion" id="descripcion" placeholder="Descripcion del post">
+			<textarea name="descripcion" id="descripcion" cols="60" rows="5" placeholder="Descripcion del post"></textarea>
 
 			<label for="categoria">Categoria</label>
 			<select name="categoria" id="categoria">
 				<option disabled selected>Seleccione una categoria</option>
 				<?php mostrarCategorias($conexion,'opciones') ?>
-			</select>
+			</select><div class=""></div>
 
 			<input type="hidden" name="tipo" value="nuevo">
 			<input type="hidden" name="usuario" value="<?= $_SESSION['usuario']['id_user']  ?>">
 			<input type="submit" value="Crear">
 		</form>
+
+		<?= isset($_SESSION['post'])? mostrandoErrores($_SESSION['post']):' '; ?>
 	</div>
 <?php else: ?>
 

@@ -73,6 +73,7 @@ function validateEmpty($datos){
 //validar post
 function validatePost($data){
 	$devolvemos = array();
+	$empty = false;
 
 	if (isset($data['tipo'])) {
 		unset($data['tipo']);
@@ -81,14 +82,20 @@ function validatePost($data){
 	foreach ($data as $key => $value) {
 		if ($key != 'usuario') {
 			if ($value != '') {
-				$devolvemos[$key] = $value;
+				$devolvemos[$key] = trim($value);
 			}else{
-				$devolvemos['empty'] = 'Ningun campo debe estar vacio';
+				$empty = true;
 			}
 		}
 	}
 
-	$devolvemos['usuario'] = $data['usuario'];	
+	if ($empty) {
+		$devolvemos['empty'] = 'Ningun campo debe estar vacio';
+	}else{
+		$devolvemos['usuario'] = (int) $data['usuario'];
+		$devolvemos['id'] = null;	
+	}
+	
 	return $devolvemos;
 }
 
@@ -153,6 +160,21 @@ function mostrarError($errores,$campo,$caja = null){
 	return $alerta;
 }
 
+//mostrando cualquier error -funcion mejorada-
+function mostrandoErrores($data){
+	$alerta = '';
+
+	foreach ($data as $key => $value) {
+		if ($key != 'insert_post') {
+			$alerta = '<div class="error"><p>'.ucfirst($data[$key]).'</p></div>';
+		}else{
+			$alerta = '<div class="success"><p>'.ucfirst($data[$key]).'</p></div>';
+		}
+	}
+
+	return $alerta;
+}
+
 //mostrando msj success
 function mostrarSucess($success){
 	$alerta = '';
@@ -171,10 +193,12 @@ function borrarError(){
 	$borrado = null;
 
 	
-	if (isset($_SESSION['errores']) || isset($_SESSION['loginEmpty']) || isset($_SESSION['noLoginUser'])  || isset($_SESSION['errorLoginPassword']) && !isset($_SESSION['usuario'])) {
+	if (isset($_SESSION['errores']) || isset($_SESSION['loginEmpty']) || isset($_SESSION['noLoginUser'])  || isset($_SESSION['errorLoginPassword']) || isset($_SESSION['post']['insert_error']) || isset($_SESSION['post']['empty_post']) && !isset($_SESSION['usuario'])) {
 
 		$borrado = session_destroy();
 
+	}else{
+		//existe usuario
 	}
 
 	return $borrado;
