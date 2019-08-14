@@ -7,7 +7,7 @@
 			<!-- botones -->
 			<a href="categorias.php?nueva=1" class="btn btn-primary">Crear Categoria</a>
 			<a href="entradas.php?nueva=1" class="btn btn-primary">Crear Post</a><br><br>
-			<a href="#" class="btn btn-primary">Mi Perfil</a>
+			<a href="perfil.php" class="btn btn-primary">Mi Perfil</a>
 			<a href="includes/cerrar_sesion.php" class="btn btn-red">Cerrar Sesion</a>
 		</div>
 	<?php endif ?>

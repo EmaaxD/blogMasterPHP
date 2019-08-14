@@ -1,8 +1,8 @@
 <?php
 session_start(); 
 require_once '../includes/conexion.php';
-$conexion = conexion();
 require_once '../includes/funciones.php';
+$conexion = conexion();
 
 //registro user
 if (isset($_POST['tipo']) && $_POST['tipo'] == 'nuevo') {
@@ -60,6 +60,57 @@ if (isset($_POST['tipo']) && $_POST['tipo'] == 'nuevo') {
 	header("Location: ../index.php");
 }
 
+//editar user
+if (isset($_POST['tipo']) && $_POST['tipo'] == 'edit') {
+	$errores = array();
+	$success = array();
+	$data_sanin = array();
+
+	$data = validateEmpty($_POST);
+
+	if (!isset($data['empty'])) {
+
+		foreach ($data as $key => $value) {
+			if ($key != 'correo') {
+				$data_sanin[$key] = $value;
+			}
+		}
+		
+		$correoValido = emailValidate($data['correo']);
+
+		if ($correoValido) {
+			$data_sanin['correo'] = $correoValido;
+			$update = editarRegistro($conexion,$data_sanin,'user');
+
+			if (!isset($update['error'])) {
+				$success['success'] = $update['success'];
+			}else{
+				$errores['errorUpdate'] = $update['error'];
+			}
+		}else{
+			$errores['correoNoValido'] = 'El correo no es valido';
+		}
+
+	}else{
+		$errores['editCamposVacios'] = $data['empty']; 
+	}
+
+	if (count($errores) >= 1) {
+		$_SESSION['erroresUpdate'] = $errores;
+	}
+
+	if (count($success) >= 1) {
+		$_SESSION['successUpdate'] = $success;
+		$new_data_sesion_user = consultCondicion($conexion,'usuarios','id_user',$data['id_user']);
+
+		$_SESSION['usuario'] = $new_data_sesion_user;
+	}
+	// var_dump($new_data_sesion_user);
+	// die();
+
+	header("Location: ../perfil.php");
+}
+
 //login user
 if (isset($_POST['tipo']) && $_POST['tipo'] == 'login') {
 	
@@ -111,3 +162,4 @@ if (isset($_POST['tipo']) && $_POST['tipo'] == 'login') {
 
 	header("Location: ../index.php");	
 }
+
