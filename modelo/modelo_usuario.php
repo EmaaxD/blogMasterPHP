@@ -80,13 +80,22 @@ if (isset($_POST['tipo']) && $_POST['tipo'] == 'edit') {
 
 		if ($correoValido) {
 			$data_sanin['correo'] = $correoValido;
-			$update = editarRegistro($conexion,$data_sanin,'user');
+			$isset_email = consultCondicion($conexion,'usuarios','email',$data_sanin['correo']);
 
-			if (!isset($update['error'])) {
-				$success['success'] = $update['success'];
+			if ($isset_email['id_user'] == $data_sanin['id_user'] || empty($isset_email)) {
+
+				$update = editarRegistro($conexion,$data_sanin,'user');
+
+				if (!isset($update['error'])) {
+					$success['success'] = $update['success'];
+				}else{
+					$errores['errorUpdate'] = $update['error'];
+				}
 			}else{
-				$errores['errorUpdate'] = $update['error'];
+				$errores['correoExistente'] = 'El correo ya esta registrado en otra cuenta';
 			}
+	
+
 		}else{
 			$errores['correoNoValido'] = 'El correo no es valido';
 		}
