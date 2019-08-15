@@ -233,8 +233,13 @@ function mostrarCategorias($core, $tipo){
 }
 
 //mostrar entradas
-function mostrarEntradas($core){
-	$sqlEntradas = obtenerEntradas($core);
+function mostrarEntradas($core,$all = null){
+
+	if (is_null($all)) {
+		$sqlEntradas = obtenerEntradas($core);
+	}else{
+		$sqlEntradas = obtenerEntradas($core,1);
+	}
 
 	// return $sqlEntradas->fetch_assoc();
 

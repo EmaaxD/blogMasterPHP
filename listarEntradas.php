@@ -6,11 +6,11 @@
 
 	<!-- contenido principal -->
 	<div class="principal">
-		<h1>Ultimas entradas</h1>
-		<?php mostrarEntradas($conexion) ?>	
-		<div id="ver-todas">
+		<h1>Todas las entradas</h1>
+		<?php mostrarEntradas($conexion,1) ?>	
+		<!-- <div id="ver-todas">
 			<a href="listarEntradas.php">Ver todas las entradas</a>
-		</div>
+		</div> -->
 
 	</div>
 		

@@ -53,9 +53,13 @@ function obtenerCategorias($core){
 }
 
 //consulta tabla entradas
-function obtenerEntradas($core){
-	
-	$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria ORDER BY e.id_entrada DESC LIMIT 4";
+function obtenerEntradas($core,$limit = null){
+	if (is_null($limit)) {
+		$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria ORDER BY e.id_entrada DESC LIMIT 4";
+	}else{
+		$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria ORDER BY e.id_entrada DESC";
+	}
+
 	$consult = $core->query($sql);
 
 	return $consult;
