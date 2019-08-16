@@ -26,8 +26,20 @@
 	
 <!-- mostramos el formulario con datos para editar	 -->
 	<?php if (isset($_GET['id'])): ?>
-		<h1><?= $_GET['id'] ?></h1>	
+
+		<?php 
+			$categoria = consultCondicion($conexion,'categorias','id_categoria',$_GET['id']); 
+			if (!isset($categoria['id_categoria'])) {
+				header("Location: index.php");
+			}
+		?>
+		
+		<div class="principal">
+			<h1>Entrada de <?= ucfirst($categoria['nombre']) ?></h1>
+			<?php mostrarCategoriaEntradas($conexion,$_GET['id']) ?>	
+		</div>
 	<?php endif ?>
+
 <?php endif ?>
 
 <?php require_once 'includes/footer.php' ?>

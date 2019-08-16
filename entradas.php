@@ -27,12 +27,25 @@
 
 		<?= isset($_SESSION['post'])? mostrandoErrores($_SESSION['post']):' '; ?>
 	</div>
-<?php else: ?>
 
+<?php else: ?>
 <!-- mostramos el formulario con datos para editar	 -->
 	<?php if (isset($_GET['id'])): ?>
 		<h1><?= $_GET['id'] ?></h1>	
 	<?php endif ?>
+<?php endif ?>
+
+<!-- mostramos todo el post publicado -->
+<?php if (isset($_GET['id_post'])): ?>
+	<?php 
+		$verify = consultCondicion($conexion,'entradas','id_entrada',$_GET['id_post']);
+		if (!isset($verify['id_entrada'])) {
+			header("Location: index.php");
+		}
+	?>
+	<div class="principal">
+		<?php mostrarPostSeleccinado($conexion,$_GET['id_post']) ?>
+	</div>
 <?php endif ?>
 
 <?php require_once 'includes/footer.php' ?>

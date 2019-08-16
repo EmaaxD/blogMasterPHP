@@ -65,11 +65,24 @@ function obtenerEntradas($core,$limit = null){
 	return $consult;
 }
 
+//consulta de categorias con su entradas
+function obtenerCategoriaEntradas($core,$id){
+	$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria WHERE e.id_cate = '$id'";
+	return $result = $core->query($sql);
+
+	 // $result;
+}
+
 //consult con condicion
-function consultCondicion($core,$tabla,$campo,$data){
+function consultCondicion($core,$tabla,$campo,$data,$post = null){
 	$devolvemos = array();
 
-	$sql = "SELECT * FROM {$tabla} WHERE {$campo} = '$data'";
+	if (is_null($post)) {
+		$sql = "SELECT * FROM {$tabla} WHERE {$campo} = '$data'";
+	}else{
+		$sql = "SELECT e.*, c.nombre AS categoria, CONCAT(u.nombre,' ',u.apellido) AS user FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria INNER JOIN usuarios u ON e.id_usuario = u.id_user WHERE {$campo} = '$data'";
+	}
+
 	$result = $core->query($sql);
 
 	if ($result->num_rows >= 1) {

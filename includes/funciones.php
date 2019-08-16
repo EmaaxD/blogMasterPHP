@@ -246,7 +246,7 @@ function mostrarEntradas($core,$all = null){
 	if ($sqlEntradas->num_rows >= 1) {
 		while ($row = $sqlEntradas->fetch_assoc()) {
 			echo '<article class="entrada">
-					<a href="">
+					<a href="entradas.php?id_post='.$row['id_entrada'].'">
 						<h2>'.ucfirst($row['titulo']).'</h2>
 						<span class="fecha">'.$row['categoria'].' | '.$row['fecha'].'</span>
 						<p>'.limitandoCaracteres($row['descripcion'],47).'</p>
@@ -255,5 +255,38 @@ function mostrarEntradas($core,$all = null){
 		}
 	}else{
 		echo '<h3>No ahi post publicados</h3>';
+	}
+}
+
+//mostrar categorias con sus entradas
+function mostrarCategoriaEntradas($core,$id){
+	$entradas = obtenerCategoriaEntradas($core,$id);
+
+	if ($entradas->num_rows >= 1) {
+		while ($row = $entradas->fetch_assoc()) {
+			echo '<article class="entrada">
+					<a href="entradas.php?id_post='.$row['id_entrada'].'">
+						<h2>'.ucfirst($row['titulo']).'</h2>
+						<span class="fecha">'.$row['categoria'].' | '.$row['fecha'].'</span>
+						<p>'.limitandoCaracteres($row['descripcion'],47).'</p>
+					</a>
+				</article>';
+		}
+	}else{
+		echo '<h3>No ahi post publicados para esta categoria</h3>';
+	}
+}
+
+//mostar post selecionado
+function mostrarPostSeleccinado($core,$id){
+	if (empty($id)) {
+		echo '<h1>El post no existe</h1>';
+	}else{
+		$row = consultCondicion($core,'entradas','id_entrada',$id,1);
+		echo '<article class="entrada">
+				<h1>'.ucfirst($row['titulo']).'</h1>
+				<span class="fecha">'.ucwords($row['user']).' | '.ucfirst($row['categoria']).' | '.$row['fecha'].'</span>
+				<p>'.$row['descripcion'].'</p>
+			</article>';
 	}
 }
