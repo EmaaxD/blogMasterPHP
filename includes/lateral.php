@@ -8,7 +8,8 @@
 			<a href="categorias.php?nueva=1" class="btn btn-primary">Crear Categoria</a>
 			<a href="entradas.php?nueva=1" class="btn btn-primary">Crear Post</a><br><br>
 			<a href="perfil.php" class="btn btn-primary">Mi Perfil</a>
-			<a href="includes/cerrar_sesion.php" class="btn btn-red">Cerrar Sesion</a>
+			<a href="entradas.php?mis_entradas=1" class="btn btn-primary">Mis Posts</a>
+			<a href="includes/cerrar_sesion.php" class="btn btn-red">Salir</a>
 		</div>
 	<?php endif ?>
 	

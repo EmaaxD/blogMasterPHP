@@ -21,3 +21,30 @@ if (isset($_POST['tipo']) && $_POST['tipo'] == 'nuevo') {
 
 	header("Location: ../entradas.php?nueva=1");
 }
+
+//editamos entrada
+if (isset($_POST['tipo']) && $_POST['tipo'] == 'edit') {
+	$devolvemos = array();
+
+	$data = validateEmpty($_POST,1);
+	if (!isset($data['empty'])) {
+		$update = editarRegistro($conexion,$data,'post');
+		if (!isset($update['error'])) {
+			$devolvemos['UpdatePost']['success'] = $update['success'];
+		}
+	}else{
+		$devolvemos['UpdatePost']['error']['empty'] = $data['empty'];
+	}
+
+	header("Location: ../entradas.php?id=$data[id_post]");
+}
+
+//eliminamos entrada
+if (isset($_GET['eliminar'])) {
+	$eliminar = deleteRegistry($conexion,'entradas','id_entrada',$_GET['id']);
+	if (!isset($eliminar['error'])) {
+		header("Location: ../entradas.php?mis_entradas=1");
+	}else{
+		echo $eliminar['msj'];
+	}
+}

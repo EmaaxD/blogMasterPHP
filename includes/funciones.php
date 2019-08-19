@@ -50,7 +50,7 @@ function emptyValidate($datos){
 }
 
 //validar solo campos vacios
-function validateEmpty($datos){
+function validateEmpty($datos, $strno = null){
 	$devolvemos = array();
 
 	if (isset($datos['tipo'])) {
@@ -61,7 +61,11 @@ function validateEmpty($datos){
 		if ($value != '') {
 			$devolvemos['success'] = 'Todo correcto';
 			$devolvemos['id'] = null;
-			$devolvemos[$key] = limpiarCadena($value);
+			if (is_null($strno)) {
+				$devolvemos[$key] = limpiarCadena($value);
+			}else{
+				$devolvemos[$key] = $value;
+			}
 		}else{
 			$devolvemos['empty'] = 'No se puede enviar campos vacios';
 		}	
@@ -207,7 +211,7 @@ function borrarError(){
 //mostrar menos caracteres
 function limitandoCaracteres($cadena,$limite){
 	
-	$devolvemos = '';
+	$devolvemos = $cadena;
 	if (strlen($cadena) > $limite) {
 		$devolvemos = substr($cadena, 0,$limite).'...';
 	}
@@ -216,7 +220,7 @@ function limitandoCaracteres($cadena,$limite){
 }
 
 //mostrar categorias
-function mostrarCategorias($core, $tipo){
+function mostrarCategorias($core, $tipo, $id_cate = null){
 	
 	$consulta = obtenerCategorias($core);
 
@@ -226,19 +230,27 @@ function mostrarCategorias($core, $tipo){
 		}
 	}else{
 		while ($row = $consulta->fetch_assoc()) {
-			echo '<option value="'.$row['id_categoria'].'">'.ucfirst($row['nombre']).'</option>';
+			if ($row['id_categoria'] == $id_cate) {
+				echo '<option selected value="'.$row['id_categoria'].'">'.ucfirst($row['nombre']).'</option>';
+			}else{
+				echo '<option value="'.$row['id_categoria'].'">'.ucfirst($row['nombre']).'</option>';
+			}
 		}
 	}
 	
 }
 
 //mostrar entradas
-function mostrarEntradas($core,$all = null){
+function mostrarEntradas($core,$all = null, $main = null){
 
 	if (is_null($all)) {
 		$sqlEntradas = obtenerEntradas($core);
 	}else{
-		$sqlEntradas = obtenerEntradas($core,1);
+		if (!is_null($main)) {
+			$sqlEntradas = obtenerEntradas($core,1,$main);
+		}else{
+			$sqlEntradas = obtenerEntradas($core,1);
+		}
 	}
 
 	// return $sqlEntradas->fetch_assoc();
@@ -248,7 +260,7 @@ function mostrarEntradas($core,$all = null){
 			echo '<article class="entrada">
 					<a href="entradas.php?id_post='.$row['id_entrada'].'">
 						<h2>'.ucfirst($row['titulo']).'</h2>
-						<span class="fecha">'.$row['categoria'].' | '.$row['fecha'].'</span>
+						<span class="fecha">'.ucfirst($row['categoria']).' | '.$row['fecha'].'</span>
 						<p>'.limitandoCaracteres($row['descripcion'],47).'</p>
 					</a>
 				</article>';
@@ -286,7 +298,13 @@ function mostrarPostSeleccinado($core,$id){
 		echo '<article class="entrada">
 				<h1>'.ucfirst($row['titulo']).'</h1>
 				<span class="fecha">'.ucwords($row['user']).' | '.ucfirst($row['categoria']).' | '.$row['fecha'].'</span>
-				<p>'.$row['descripcion'].'</p>
-			</article>';
+				<p>'.$row['descripcion'].'</p>';
+				if (isset($_SESSION['usuario'])) {
+					if ($row['id_usuario'] == $_SESSION['usuario']['id_user']) {
+						echo '<a class="btn btn-primary" href="entradas.php?id='.$row['id_entrada'].'">Editar Post</a>';
+						echo '<a class="btn btn-red" href="modelo/modelo_entrada.php?id='.$row['id_entrada'].'&eliminar=1">Eliminar Post</a>';
+					}
+				}
+		echo '</article>';
 	}
 }

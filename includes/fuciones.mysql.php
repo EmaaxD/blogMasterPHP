@@ -53,11 +53,15 @@ function obtenerCategorias($core){
 }
 
 //consulta tabla entradas
-function obtenerEntradas($core,$limit = null){
+function obtenerEntradas($core,$limit = null, $id = null){
 	if (is_null($limit)) {
 		$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria ORDER BY e.id_entrada DESC LIMIT 4";
 	}else{
-		$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria ORDER BY e.id_entrada DESC";
+		if (!is_null($id)) {
+			$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria WHERE e.id_usuario = '$id' ORDER BY e.id_entrada DESC";
+		}else{
+			$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria ORDER BY e.fecha DESC";
+		}
 	}
 
 	$consult = $core->query($sql);
@@ -67,7 +71,7 @@ function obtenerEntradas($core,$limit = null){
 
 //consulta de categorias con su entradas
 function obtenerCategoriaEntradas($core,$id){
-	$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria WHERE e.id_cate = '$id'";
+	$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria WHERE e.id_cate = '$id' ORDER BY e.id_entrada DESC";
 	return $result = $core->query($sql);
 
 	 // $result;
@@ -164,15 +168,36 @@ function editarRegistro($core,$data,$type){
 		$result = $core->query($sql);
 		// echo 'editamos usuario';
 	}elseif ($type == 'post') {
-		echo 'editamos post';
-	}else{
-		echo 'editamos categoria';
+		$sql = "UPDATE entradas SET titulo = '$data[titulo]',descripcion = '$data[descripcion]',id_cate = '$data[categoria]' WHERE id_entrada = '$data[id_post]'";
+		$result = $core->query($sql);
 	}
 
 	if ($result) {
 		$devolvemos['success'] = 'Se edito correctamente';
 	}else{
 		$devolvemos['error'] = 'Error al editar';
+	}
+
+	return $devolvemos;
+}
+
+/*DELETE*/
+
+//eliminar un registro de cualquier tabla
+function deleteRegistry($core,$tabla,$campo,$data){
+	$sql = "DELETE FROM {$tabla} WHERE {$campo} = '$data'";
+	$result = $core->query($sql);
+
+	if ($result) {
+		$devolvemos = array(
+			'tipo' => 'success',
+			'msj' => 'Eliminado con exito'
+		);
+	}else{
+		$devolvemos = array(
+			'tipo' => 'error',
+			'msj' => 'Error al eliminar registro'
+		);
 	}
 
 	return $devolvemos;
