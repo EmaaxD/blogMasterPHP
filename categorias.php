@@ -5,7 +5,7 @@
 <!-- mostramos el formulario para crear nueva categoria -->
 <?php if (isset($_GET['nueva'])): ?>
 	<div class="principal">
-		<h1>Crea tu propia categoria gatioli</h1>
+		<h1>Crea tu propia categoria</h1>
 
 		<form action="modelo/modelo_categoria.php" method="post">
 			<label for="nombre">Nombre de la categoria</label>

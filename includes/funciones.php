@@ -241,7 +241,7 @@ function mostrarCategorias($core, $tipo, $id_cate = null){
 }
 
 //mostrar entradas
-function mostrarEntradas($core,$all = null, $main = null){
+function mostrarEntradas($core,$all = null, $main = null, $search = null){
 
 	if (is_null($all)) {
 		$sqlEntradas = obtenerEntradas($core);
@@ -249,7 +249,11 @@ function mostrarEntradas($core,$all = null, $main = null){
 		if (!is_null($main)) {
 			$sqlEntradas = obtenerEntradas($core,1,$main);
 		}else{
-			$sqlEntradas = obtenerEntradas($core,1);
+			if (is_null($search)) {
+				$sqlEntradas = obtenerEntradas($core,1);
+			}else{
+				$sqlEntradas = obtenerEntradas($core,1,null,$search);
+			}
 		}
 	}
 

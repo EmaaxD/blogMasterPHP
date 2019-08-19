@@ -53,14 +53,18 @@ function obtenerCategorias($core){
 }
 
 //consulta tabla entradas
-function obtenerEntradas($core,$limit = null, $id = null){
+function obtenerEntradas($core,$limit = null, $id = null, $seach = null){
 	if (is_null($limit)) {
 		$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria ORDER BY e.id_entrada DESC LIMIT 4";
 	}else{
 		if (!is_null($id)) {
 			$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria WHERE e.id_usuario = '$id' ORDER BY e.id_entrada DESC";
 		}else{
-			$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria ORDER BY e.fecha DESC";
+			if (is_null($seach)) {
+				$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria ORDER BY e.fecha DESC";
+			}else{
+				$sql = "SELECT e.*, c.nombre AS categoria FROM entradas e INNER JOIN categorias c ON e.id_cate = c.id_categoria WHERE e.titulo LIKE '%$seach%' ORDER BY e.fecha DESC";
+			}
 		}
 	}
 
